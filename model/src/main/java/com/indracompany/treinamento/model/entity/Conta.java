@@ -31,7 +31,7 @@ public class Conta extends GenericEntity<Long>{
 	private String agencia;
 	
 	@Column(length = 6, nullable = false)
-	private String conta;
+	private String numero;
 	
 	@Column(nullable = false)
 	private Double saldo;
