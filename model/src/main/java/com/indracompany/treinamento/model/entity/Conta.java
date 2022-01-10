@@ -8,11 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-
-import org.hibernate.validator.constraints.br.CPF;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,28 +20,27 @@ import lombok.EqualsAndHashCode;
 @Table(name = "clientes")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Cliente extends GenericEntity<Long>{
-	
+public class Conta extends GenericEntity<Long>{
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(length = 4, nullable = false)
+	private String agencia;
+	
+	@Column(length = 6, nullable = false)
+	private String conta;
+	
+	@Column(nullable = false)
+	private Double saldo;
+	
+	@ManyToOne
+	@JoinColumn(name = "fk_cliente_id", nullable = false)
+	private Cliente cliente;
+	
+	@OneToMany(mappedBy = "conta", fetch = FetchType.LAZY)
+	private List<Operacao> listOperacoes;
 
-	@Column(length = 50)
-	private String nome;
-	
-	@CPF
-	@Column(length = 11)
-	private String cpf;
-	
-	@Email
-	private String email;
-	
-	private boolean ativo;
-	
-	private String observacoes;
-	
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
-	private List<Conta> listContas;
-
-	
 }
