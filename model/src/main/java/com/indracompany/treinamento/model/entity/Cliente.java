@@ -42,7 +42,7 @@ public class Cliente extends GenericEntity<Long>{
 	private String observacoes;
 	
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
-	private List<Conta> listContas;
+	private List<Conta> listConta;
 
 	
 }

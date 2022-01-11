@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "clientes")
+@Table(name = "contas")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Conta extends GenericEntity<Long>{
@@ -41,6 +41,6 @@ public class Conta extends GenericEntity<Long>{
 	private Cliente cliente;
 	
 	@OneToMany(mappedBy = "conta", fetch = FetchType.LAZY)
-	private List<Operacao> listOperacoes;
+	private List<Operacao> listOperacao;
 
 }
