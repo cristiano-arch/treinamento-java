@@ -25,9 +25,12 @@ public class ContaService extends GenericCrudService<Conta, Long, ContaRepositor
 		return conta.getSaldo();
 	}
 	
-	public Double sacar(String agencia, String numero, Double valor) {
+	public Conta sacar(String agencia, String numero, Double valor) {
 		
-		return consultarSaldo(agencia, numero) - valor;
+		Conta conta = contaRepository.findByAgenciaAndNumero(agencia, numero);
+		conta.setSaldo(conta.getSaldo()-valor);
+		
+		return contaRepository.save(conta);
 	}
 	
 	public List<Conta> consultarContaCliente(String cpf) {

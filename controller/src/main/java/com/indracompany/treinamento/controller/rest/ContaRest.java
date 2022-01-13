@@ -5,12 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.indracompany.treinamento.exception.AplicacaoException;
+import com.indracompany.treinamento.model.dto.SaqueDTO;
 import com.indracompany.treinamento.model.entity.Conta;
 import com.indracompany.treinamento.model.service.ContaService;
 
@@ -30,12 +32,11 @@ public class ContaRest extends GenericCrudRest<Conta, Long, ContaService>{
 		return new ResponseEntity<>(saldo, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/consultar-saldo/{agencia}/{conta}/{valor}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<Double> sacar(final @PathVariable String agencia,
-		@PathVariable String conta, @PathVariable Double valor) throws AplicacaoException {
+	@RequestMapping(value = "/saque", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<Void> sacar(@RequestBody SaqueDTO objDto) throws AplicacaoException {
 		
-		Double saldo = contaService.sacar(agencia, conta, valor);
+		contaService.sacar(objDto.getAgencia(), objDto.getNumeroConta(), objDto.getValor());
 		
-		return new ResponseEntity<>(saldo, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
