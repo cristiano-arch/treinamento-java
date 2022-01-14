@@ -45,6 +45,18 @@ public class ContaService extends GenericCrudService<Conta, Long, ContaRepositor
 		return contaRepository.save(conta);
 	}
 	
+	
+	public void transferir(String agenciaDestino, String agenciaOrigem, 
+			 String numeroContaDestino, String numeroContaOrigem, Double valor) {
+		
+		if (!agenciaOrigem.equals(agenciaDestino) && !numeroContaOrigem.equals(numeroContaDestino)) {
+			sacar(agenciaOrigem, numeroContaOrigem, valor);
+			depositar(agenciaDestino, numeroContaDestino, valor);
+		} else {
+			throw new AplicacaoException(ExceptionValidacoes.ERRO_CONTA_INVALIDA);
+		}
+	}
+	
 	public List<Conta> consultarContaCliente(String cpf) {
 		return contaRepository.findByClienteCpf(cpf);
 	}
