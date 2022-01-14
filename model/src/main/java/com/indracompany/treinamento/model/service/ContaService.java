@@ -37,6 +37,14 @@ public class ContaService extends GenericCrudService<Conta, Long, ContaRepositor
 		}
 	}
 	
+	public Conta depositar(String agencia, String numero, Double valor) {
+		
+		Conta conta = encontrarConta(agencia, numero);
+		conta.setSaldo(conta.getSaldo()+valor);
+		
+		return contaRepository.save(conta);
+	}
+	
 	public List<Conta> consultarContaCliente(String cpf) {
 		return contaRepository.findByClienteCpf(cpf);
 	}
