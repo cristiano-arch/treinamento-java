@@ -12,11 +12,6 @@ import com.indracompany.treinamento.model.repository.ContaRepository;
 
 @Service
 public class ContaService extends GenericCrudService<Conta, Long, ContaRepository>{
-
-//	"/consultar-saldo/{agencia}/{conta}"
-//	"/consultar-contas-cliente/{cpf}"
-//	"/deposito"
-//	"/saque"
 	
 	@Autowired
 	private ContaRepository contaRepository;
@@ -29,12 +24,11 @@ public class ContaService extends GenericCrudService<Conta, Long, ContaRepositor
 		
 		Conta conta = encontrarConta(agencia, numero);
 		
-		if (conta.getSaldo() > valor) {
-			conta.setSaldo(conta.getSaldo()-valor);
-			return contaRepository.save(conta);
-		} else {
+		if (conta.getSaldo() < valor)
 			throw new AplicacaoException(ExceptionValidacoes.ERRO_SALDO_INEXISTENTE);
-		}
+		
+		conta.setSaldo(conta.getSaldo()-valor);
+		return contaRepository.save(conta);
 	}
 	
 	public Conta depositar(String agencia, String numero, Double valor) {
@@ -45,16 +39,14 @@ public class ContaService extends GenericCrudService<Conta, Long, ContaRepositor
 		return contaRepository.save(conta);
 	}
 	
-	
 	public void transferir(String agenciaDestino, String agenciaOrigem, 
 			 String numeroContaDestino, String numeroContaOrigem, Double valor) {
 		
-		if (!agenciaOrigem.equals(agenciaDestino) && !numeroContaOrigem.equals(numeroContaDestino)) {
-			sacar(agenciaOrigem, numeroContaOrigem, valor);
-			depositar(agenciaDestino, numeroContaDestino, valor);
-		} else {
+		if (agenciaOrigem.equals(agenciaDestino) && numeroContaOrigem.equals(numeroContaDestino))
 			throw new AplicacaoException(ExceptionValidacoes.ERRO_CONTA_INVALIDA);
-		}
+		
+		sacar(agenciaOrigem, numeroContaOrigem, valor);
+		depositar(agenciaDestino, numeroContaDestino, valor);
 	}
 	
 	public List<Conta> consultarContaCliente(String cpf) {
@@ -64,10 +56,8 @@ public class ContaService extends GenericCrudService<Conta, Long, ContaRepositor
 	public Conta encontrarConta(String agencia, String numero) {
 		Conta conta = contaRepository.findByAgenciaAndNumero(agencia, numero);
 		
-		if (conta != null) {
-			return conta;
-		} else {
-			throw new AplicacaoException(ExceptionValidacoes.ERRO_CONTA_INVALIDA);
-		}
+		if (conta == null) throw new AplicacaoException(ExceptionValidacoes.ERRO_CONTA_INVALIDA);
+			
+		return conta;
 	}
 }
